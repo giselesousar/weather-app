@@ -34,7 +34,7 @@ export const setWeather = (coordinates: { lat: number, lon: number }):
             const { lat, lon } = coordinates;
             WeatherAPI.get('/', {
                 params: {
-                    lat, lon, appid: '1bf0061bf52f3c39dbd6f4ef13058389'
+                    lat, lon, appid: '1bf0061bf52f3c39dbd6f4ef13058389', units: 'metric'
                 }
             })
                 .then((resp: AxiosResponse<WeatherAPIResponse>) => {
@@ -42,16 +42,18 @@ export const setWeather = (coordinates: { lat: number, lon: number }):
                         name: resp.data.name,
                         main: resp.data.weather[0].main,
                         temp: resp.data.main.temp,
+                        feels_like: resp.data.main.feels_like,
+                        temp_min: resp.data.main.temp_min,
+                        temp_max: resp.data.main.temp_max,
                         icon: resp.data.weather[0].icon,
                         description: resp.data.weather[0].description,
+                        dt: new Date()
                     };
-
                     dispatch(setWeatherSuccess(weather));
                     resolve();
                 })
                 .catch((err: Error) => {
                     dispatch(setWeatherError(err.message))
-                    console.log(err);
                 })
         })
     }

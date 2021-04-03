@@ -3,6 +3,10 @@ export interface Weather {
     main: string
     icon: string
     temp: number
+    feels_like: number
+    temp_min: number
+    temp_max: number
+    dt: Date
     description: string
 }
 
@@ -21,7 +25,10 @@ export interface WeatherAPIResponse {
         }
       ],
     main: {
-        temp: number,
+        temp: number
+        feels_like: number
+        temp_min: number
+        temp_max: number
     },
     name: string,
 }

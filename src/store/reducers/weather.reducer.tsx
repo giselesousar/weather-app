@@ -7,6 +7,10 @@ const initial_state: WeatherState = {
         main: '',
         icon: '',
         temp: 0,
+        feels_like: 0,
+        temp_max: 0,
+        temp_min: 0,
+        dt: null,
         description: ''
     },
     loading: false,
@@ -16,8 +20,10 @@ const initial_state: WeatherState = {
   export function WeatherReducer(state: WeatherState = initial_state, action: WeatherActionTypes): WeatherState {
     switch (action.type) {
       case FETCH_WEATHER_SUCCESS: {
+        console.log('1: ', action)
         return {
           ...state,
+          loading: false,
           weather: action.payload
         };
       }
@@ -29,6 +35,7 @@ const initial_state: WeatherState = {
       case FETCH_WEATHER_ERROR:
       return {
         ...state,
+        loading: false,
         error: action.error
       };
       default:

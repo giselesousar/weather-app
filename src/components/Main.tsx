@@ -1,58 +1,61 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, TouchableOpacity, View, Platform, PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { shallowEqual, useSelector, useDispatch, connect } from 'react-redux';
 import { setWeather } from '../store/actions'
-import { Weather, WeatherState } from '../store/types/weather.types';
+import { RootState } from '../store/reducers/index'
+import styled from 'styled-components';
+import WeatherScreen from './Weather';
+import { 
+    Text, 
+    TouchableOpacity, 
+    View, 
+    Platform, 
+    PermissionsAndroid 
+} from 'react-native';
 
-interface Coordinates {
-    lat: number
-    lon: number
-}
+const ViewContainer = styled(View)`
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+`
 
-interface LocationStatus {
-    status: 'ERROR' | 'SUCCESS' | 'FECHING' | 'DENIED'
-}
+const TextStyled = styled(Text)`
+    font-size: 20px;
+`
+
+const Button = styled(TouchableOpacity)`
+    
+`
 
 const Main = () => {
 
-    const [coordinates, setCoordinates] = useState<Coordinates>(null);
-    const [locationStatus, setLocationStatus] = useState<LocationStatus>({ status: 'DENIED' });
-    const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [error, setError] = useState<String>('');
 
     const dispatch = useDispatch();
 
-    const weather:Weather = useSelector(
-        (state: WeatherState) => state.weather,
+    const weather:RootState = useSelector(
+        (state: RootState) => state,
         shallowEqual // ?
     )
 
     const watchID = useRef(null);
 
     useEffect(() => {
+        handlePermission();
         return () => {
             Geolocation.clearWatch(watchID.current);
           };
     }, [])
 
     const getCoordinates = () => {
-        setLocationStatus({ status: 'FECHING' });
         Geolocation.getCurrentPosition(
             (position) => {
-                console.log('posi: ', position)
-                setLocationStatus({ status: 'SUCCESS' })
-                // setCoordinates({
-                //     lat: position.coords.latitude,
-                //     lon: position.coords.longitude
-                // })
                 dispatch(setWeather({
                     lat: position.coords.latitude,
                     lon: position.coords.longitude
                 }))
             },
             (err) => {
-                setLocationStatus({ status: 'ERROR' });
                 setError(err.message);
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
@@ -63,14 +66,12 @@ const Main = () => {
     const subscribeLocation = async () => {
         watchID.current = Geolocation.watchPosition(
             (position) => {   
-              setLocationStatus({ status: 'SUCCESS' })
-                // setCoordinates({
-                //     lat: position.coords.latitude,
-                //     lon: position.coords.longitude
-                // })
+                dispatch(setWeather({
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude
+                }))
             },
             (err) => {
-                setLocationStatus({ status: 'ERROR' });
                 setError(err.message);
             },
             {
@@ -82,7 +83,7 @@ const Main = () => {
     const handlePermission = async () => {
         if (Platform.OS === 'ios') {
             getCoordinates();
-            // subscribeLocation();
+            subscribeLocation();
             // fetch
         } else {
             try {
@@ -99,7 +100,7 @@ const Main = () => {
                     getCoordinates();
                     // subscribeLocation();
                 } else {
-                    setLocationStatus({ status: 'DENIED' });
+                    // access denied
                 }
             } catch (err) {
                 console.warn(err);
@@ -108,29 +109,28 @@ const Main = () => {
     };
 
     useEffect(() => {
-        console.log(locationStatus.status)
-        console.log(coordinates)
-        console.log('weather: ', weather)
-    }, [locationStatus])
+        console.log('weather: ', weather.weather)
+    }, [weather])
     
     return (
-        <View>
+        <ViewContainer>
             {
-                <>
-                <Text>
-                    This app needs to access your location
-                    </Text>
-                <TouchableOpacity onPress={ handlePermission }>
-                    <Text>
-                        Enable location access
-                    </Text>
-                </TouchableOpacity>
-                <Text>{error}</Text>
-                </>
-
-               
+                weather.weather.loading ?
+                <TextStyled>Carregando...</TextStyled>
+                :
+                weather.weather.error ?
+                <ViewContainer>
+                    <TextStyled>{error}</TextStyled>
+                    <Button onPress={ getCoordinates }>
+                        <TextStyled>
+                            Try again
+                        </TextStyled>
+                    </Button>
+                </ViewContainer>
+                :
+                <WeatherScreen weather={weather.weather.weather} />
             }
-        </View>
+        </ViewContainer>
     )
 }
 
