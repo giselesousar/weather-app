@@ -1,4 +1,4 @@
-interface Weather {
+export interface Weather {
     name: string
     main: string
     icon: string
@@ -6,18 +6,13 @@ interface Weather {
     description: string
 }
 
-type WeatherState = {
+export interface WeatherState {
     weather: Weather
+    loading: boolean
+    error: string
 }
 
-type WeatherAction = {
-    type: string,
-    weather: Weather
-}
-
-type DispatchType = (args: WeatherAction) => WeatherAction;
-
-type WeatherAPIResponse = {
+export interface WeatherAPIResponse {
     weather: [
         {
           main: string

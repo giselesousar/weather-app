@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/geolocation": "^2.0.2",
     "axios": "^0.21.1",
     "react": "17.0.1",
     "react-native": "0.64.0",
+    "react-native-geolocation-service": "^5.2.0",
     "react-redux": "^7.2.3",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
