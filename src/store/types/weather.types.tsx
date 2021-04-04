@@ -6,8 +6,10 @@ export interface Weather {
     feels_like: number
     temp_min: number
     temp_max: number
+    humidity: number
     dt: Date
     description: string
+    speed: number
 }
 
 export interface WeatherState {
@@ -29,6 +31,10 @@ export interface WeatherAPIResponse {
         feels_like: number
         temp_min: number
         temp_max: number
+        humidity: number
     },
+    wind: {
+        speed: number
+    }
     name: string,
 }

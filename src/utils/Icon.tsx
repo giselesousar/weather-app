@@ -1,9 +1,12 @@
 import React from 'react';
+import { Dimensions } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5'
 
 interface Props {
     name: string
 }
+
+const { width } = Dimensions.get('window');
 
 const names = {
     "01d": "sun",
@@ -30,5 +33,5 @@ export const WeatherIcon = (props:Props) => {
 
     const { name } = props;
 
-    return <FontAwesome name={names[name]} size={50} />
+    return <FontAwesome name={names[name]} color="#fcfcfc" size={width/10} />
 }

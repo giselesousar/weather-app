@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 import { AxiosResponse } from 'axios'
-import { Weather, WeatherAPIResponse, WeatherState } from '../types/weather.types';
+import { Weather, WeatherAPIResponse } from '../types/weather.types';
 import { WeatherAPI } from '../../services/WeatherAPI';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import {
@@ -47,7 +47,9 @@ export const setWeather = (coordinates: { lat: number, lon: number }):
                         temp_max: resp.data.main.temp_max,
                         icon: resp.data.weather[0].icon,
                         description: resp.data.weather[0].description,
-                        dt: new Date()
+                        dt: new Date(),
+                        humidity: resp.data.main.humidity,
+                        speed: resp.data.wind.speed,
                     };
                     dispatch(setWeatherSuccess(weather));
                     resolve();

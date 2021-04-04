@@ -10,17 +10,26 @@ import {
     TouchableOpacity, 
     View, 
     Platform, 
-    PermissionsAndroid 
+    PermissionsAndroid,
+    Dimensions 
 } from 'react-native';
 
-const ViewContainer = styled(View)`
+interface Props {
+    backgroundColor?: string
+  }
+
+const { width } = Dimensions.get('window');
+
+const ViewContainer = styled(View)<Props>`
     flex: 1;
     align-items: center;
     justify-content: center;
+    background: #5e00b3;
 `
 
 const TextStyled = styled(Text)`
-    font-size: 20px;
+    font-size: ${width/20}px;
+    color: #fff;
 `
 
 const Button = styled(TouchableOpacity)`
@@ -35,7 +44,7 @@ const Main = () => {
 
     const weather:RootState = useSelector(
         (state: RootState) => state,
-        shallowEqual // ?
+        shallowEqual 
     )
 
     const watchID = useRef(null);
@@ -63,27 +72,27 @@ const Main = () => {
         );
     };
 
-    const subscribeLocation = async () => {
-        watchID.current = Geolocation.watchPosition(
-            (position) => {   
-                dispatch(setWeather({
-                    lat: position.coords.latitude,
-                    lon: position.coords.longitude
-                }))
-            },
-            (err) => {
-                setError(err.message);
-            },
-            {
-              enableHighAccuracy: false,
-            },
-          );
-    }
+    // const subscribeLocation = async () => {
+    //     watchID.current = Geolocation.watchPosition(
+    //         (position) => {   
+    //             dispatch(setWeather({
+    //                 lat: position.coords.latitude,
+    //                 lon: position.coords.longitude
+    //             }))
+    //         },
+    //         (err) => {
+    //             setError(err.message);
+    //         },
+    //         {
+    //           enableHighAccuracy: false,
+    //         },
+    //       );
+    // }
 
     const handlePermission = async () => {
         if (Platform.OS === 'ios') {
             getCoordinates();
-            subscribeLocation();
+            // subscribeLocation();
             // fetch
         } else {
             try {
@@ -107,16 +116,12 @@ const Main = () => {
             }
         }
     };
-
-    useEffect(() => {
-        console.log('weather: ', weather.weather)
-    }, [weather])
     
     return (
         <ViewContainer>
             {
                 weather.weather.loading ?
-                <TextStyled>Carregando...</TextStyled>
+                <TextStyled>Loading...</TextStyled>
                 :
                 weather.weather.error ?
                 <ViewContainer>

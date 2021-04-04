@@ -10,6 +10,8 @@ const initial_state: WeatherState = {
         feels_like: 0,
         temp_max: 0,
         temp_min: 0,
+        humidity: 0,
+        speed: 0,
         dt: null,
         description: ''
     },
@@ -20,7 +22,6 @@ const initial_state: WeatherState = {
   export function WeatherReducer(state: WeatherState = initial_state, action: WeatherActionTypes): WeatherState {
     switch (action.type) {
       case FETCH_WEATHER_SUCCESS: {
-        console.log('1: ', action)
         return {
           ...state,
           loading: false,
