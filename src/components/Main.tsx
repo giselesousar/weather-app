@@ -14,22 +14,18 @@ import {
     Dimensions 
 } from 'react-native';
 
-interface Props {
-    backgroundColor?: string
-  }
-
 const { width } = Dimensions.get('window');
 
-const ViewContainer = styled(View)<Props>`
+const ViewContainer = styled(View)`
     flex: 1;
     align-items: center;
     justify-content: center;
-    background: #5e00b3;
+    background: ${props => props.theme.colors.main};
 `
 
 const TextStyled = styled(Text)`
     font-size: ${width/20}px;
-    color: #fff;
+    color: ${props => props.theme.colors.text};
 `
 
 const Button = styled(TouchableOpacity)`
@@ -121,12 +117,12 @@ const Main = () => {
         <ViewContainer>
             {
                 weather.weather.loading ?
-                <TextStyled>Loading...</TextStyled>
+                <TextStyled>Fetching weather data...</TextStyled>
                 :
                 weather.weather.error ?
                 <ViewContainer>
                     <TextStyled>{error}</TextStyled>
-                    <Button onPress={ getCoordinates }>
+                    <Button onPress={ handlePermission }>
                         <TextStyled>
                             Try again
                         </TextStyled>

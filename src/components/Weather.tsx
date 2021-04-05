@@ -52,7 +52,7 @@ const Location = styled(View)`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 40%;
+    width: ${width*0.45}px;
 `
 const LocationInfo = styled(View)`
     flex-direction: column;
@@ -94,35 +94,35 @@ const ColInfo = styled(View)`
 
 const TextCity = styled(Text)`
     font-size: ${width/24}px;
-    color: #fcfcfc;
+    color: ${props => props.theme.colors.text};
     font-weight: bold;
 `
 
 const TextDate = styled(Text)`
     font-size: ${width/24}px;
-    color: #fcfcfc;
+    color: ${props => props.theme.colors.text};
 `
 
 const TextDescription = styled(Text)`
     font-size: ${width/24}px;
-    color: #fcfcfc;
+    color: ${props => props.theme.colors.text};
 `
 
 const TextTemp = styled(Text)`
     font-size: ${width/9}px;;
-    color: #fcfcfc;
+    color: ${props => props.theme.colors.text};
     font-weight: bold;
 `
 
 const TextLabel = styled(Text)`
     font-size: ${width/24}px;;
-    color: #fcfcfc;
+    color: ${props => props.theme.colors.text};
     font-weight: bold;
 `
 
 const TextInfo = styled(Text)`
     font-size: ${width/25}px;;
-    color: #fcfcfc;
+    color: ${props => props.theme.colors.text};
 `
 
 const WeatherScreen = (props: Props) => {
@@ -147,7 +147,7 @@ const WeatherScreen = (props: Props) => {
                             {name}
                         </TextCity>
                         <TextDate>
-                            {formatDate(dt)}
+                            {dt && formatDate(dt)}
                         </TextDate>
                     </LocationInfo>
                 </Location>
@@ -158,7 +158,7 @@ const WeatherScreen = (props: Props) => {
                 </Temp>
                 <Description>
                     <TextDescription>
-                        {capitalizeFirstLetter(description)}
+                        {description && capitalizeFirstLetter(description)}
                     </TextDescription>
                 </Description>
             </ContainerTop>

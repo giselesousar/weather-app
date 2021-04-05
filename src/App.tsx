@@ -1,14 +1,25 @@
 
 import React from 'react';
-import Main from './components/Main';
 import { Provider } from "react-redux"
-import {store} from './store'
+import { store } from './store'
+import Routes from './routes';
+import { ThemeProvider } from 'styled-components';
+import { DefaultTheme } from 'styled-components';
+
+const theme: DefaultTheme = {
+  colors: {
+    text: '#fcfcfc',
+    main: '#5e00b3',
+  }
+};
 
 const App = () => {
 
   return (
     <Provider store={store}>  
-      <Main />
+      <ThemeProvider theme={theme}>
+        <Routes />
+      </ThemeProvider>
     </Provider>
   );
 };
