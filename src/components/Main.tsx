@@ -5,13 +5,14 @@ import { setWeather } from '../store/actions'
 import { RootState } from '../store/reducers/index'
 import styled from 'styled-components';
 import WeatherScreen from './Weather';
-import { 
-    Text, 
-    TouchableOpacity, 
-    View, 
-    Platform, 
+import {
+    Text,
+    TouchableOpacity,
+    View,
+    Platform,
     PermissionsAndroid,
-    Dimensions 
+    Dimensions,
+    StatusBar
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
@@ -24,7 +25,7 @@ const ViewContainer = styled(View)`
 `
 
 const TextStyled = styled(Text)`
-    font-size: ${width/20}px;
+    font-size: ${width / 20}px;
     color: ${props => props.theme.colors.text};
 `
 
@@ -38,9 +39,9 @@ const Main = () => {
 
     const dispatch = useDispatch();
 
-    const weather:RootState = useSelector(
+    const weather: RootState = useSelector(
         (state: RootState) => state,
-        shallowEqual 
+        shallowEqual
     )
 
     const watchID = useRef(null);
@@ -49,7 +50,7 @@ const Main = () => {
         handlePermission();
         return () => {
             Geolocation.clearWatch(watchID.current);
-          };
+        };
     }, [])
 
     const getCoordinates = () => {
@@ -64,7 +65,7 @@ const Main = () => {
                 setError(err.message);
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-            
+
         );
     };
 
@@ -112,26 +113,32 @@ const Main = () => {
             }
         }
     };
-    
+
     return (
-        <ViewContainer>
-            {
-                weather.weather.loading ?
-                <TextStyled>Fetching weather data...</TextStyled>
-                :
-                weather.weather.error ?
-                <ViewContainer>
-                    <TextStyled>{error}</TextStyled>
-                    <Button onPress={ handlePermission }>
-                        <TextStyled>
-                            Try again
+        <>
+            <StatusBar
+                animated={true}
+                backgroundColor="#5e00b3"
+            />
+            <ViewContainer>
+                {
+                    weather.weather.loading ?
+                        <TextStyled>Fetching weather data...</TextStyled>
+                        :
+                        weather.weather.error ?
+                            <ViewContainer>
+                                <TextStyled>{error}</TextStyled>
+                                <Button onPress={handlePermission}>
+                                    <TextStyled>
+                                        Try again
                         </TextStyled>
-                    </Button>
-                </ViewContainer>
-                :
-                <WeatherScreen weather={weather.weather.weather} />
-            }
-        </ViewContainer>
+                                </Button>
+                            </ViewContainer>
+                            :
+                            <WeatherScreen weather={weather.weather.weather} />
+                }
+            </ViewContainer>
+        </>
     )
 }
 
