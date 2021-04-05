@@ -5,3 +5,6 @@
 * Typescript
 * Redux thunk
 * Styled components
+
+## To do
+* Jest
